@@ -7,6 +7,8 @@ from .router.router_user import router_user
 from .router.router_exercise import router_exercise
 from .router.router_level import router_level
 from .router.router_level_quiz import router_level_quiz
+from .router.router_user_level import router_user_level
+from .router.router_user_exercise import router_user_exercise
 
 load_dotenv(find_dotenv())
 
@@ -32,4 +34,6 @@ app.include_router(router_user)
 app.include_router(router_exercise)
 app.include_router(router_level)
 app.include_router(router_level_quiz)
+app.include_router(router_user_level)
+app.include_router(router_user_exercise)
 

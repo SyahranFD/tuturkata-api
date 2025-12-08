@@ -13,11 +13,6 @@ def seed_users(db: Session) -> None:
             "email": "admin@gmail.com",
             "password": "admin",
         },
-        {
-            "username": "tester",
-            "email": "tester@example.com",
-            "password": "test12345",
-        },
     ]
 
     for s in samples:
