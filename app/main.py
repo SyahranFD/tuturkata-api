@@ -31,9 +31,6 @@ def docs():
 
 # Include routers
 app.include_router(router_user)
-app.include_router(router_exercise)
-app.include_router(router_level)
-app.include_router(router_level_quiz)
 app.include_router(router_user_level)
 app.include_router(router_user_exercise)
 
