@@ -10,32 +10,32 @@ def seed_levels(db: Session, exercises_by_title: Dict[str, Exercise]) -> Dict[Tu
     # Buat 5 level untuk setiap exercise, dengan judul dan deskripsi yang relevan
     specs = [
         # Membaca Kata
-        ("Membaca Kata", 1, "Level 1 - Pemula", "Kata-kata sederhana"),
-        ("Membaca Kata", 2, "Level 2 - Dasar", "Kata-kata umum"),
-        ("Membaca Kata", 3, "Level 3 - Menengah", "Kata-kata pendek"),
-        ("Membaca Kata", 4, "Level 4 - Lanjutan", "Kata-kata kompleks"),
-        ("Membaca Kata", 5, "Level 5 - Mahir", "Kata-kata lengkap"),
+        ("Membaca Kata", 1, "Kata Sederhana (Tempo Lambat)", "Ucapkan kata dasar secara perlahan untuk melatih perencanaan suara."),
+        ("Membaca Kata", 2, "Pengulangan Konsonan P/B/T/K", "Ucapkan suku kata P/B/T/K beberapa kali dengan artikulasi lembut."),
+        ("Membaca Kata", 3, "Kata Berpola CV/CVC", "Eja kata berpola suku kata dan ucapkan per suku kata."),
+        ("Membaca Kata", 4, "Kata Kompleks (Artikulasi Lembut)", "Latih kata lebih panjang tanpa tekanan bibir/lidah."),
+        ("Membaca Kata", 5, "Daftar Kata Acak", "Jaga konsistensi lafal pada variasi kata acak."),
 
         # Kalimat Tingkat Dasar
-        ("Kalimat Tingkat Dasar", 1, "Level 1 - Pemula", "Kalimat sangat pendek"),
-        ("Kalimat Tingkat Dasar", 2, "Level 2 - Dasar", "Kalimat umum sehari-hari"),
-        ("Kalimat Tingkat Dasar", 3, "Level 3 - Menengah", "Kalimat gabungan sederhana"),
-        ("Kalimat Tingkat Dasar", 4, "Level 4 - Lanjutan", "Kalimat panjang dasar"),
-        ("Kalimat Tingkat Dasar", 5, "Level 5 - Mahir", "Kalimat kompleks ringan"),
+        ("Kalimat Tingkat Dasar", 1, "Kalimat Pendek", "Baca satu kalimat pendek dengan intonasi tenang."),
+        ("Kalimat Tingkat Dasar", 2, "Repeat After Me", "Ikuti dan ulangi kalimat pelatih untuk pola perkenalan sederhana."),
+        ("Kalimat Tingkat Dasar", 3, "Dialog Perkenalan", "Roleplay sapaan dan perkenalan singkat."),
+        ("Kalimat Tingkat Dasar", 4, "Kalimat Panjang", "Baca kalimat panjang 20–25 kata dengan jeda wajar."),
+        ("Kalimat Tingkat Dasar", 5, "Tanya Jawab", "Jawab pertanyaan sederhana tentang diri Anda."),
 
         # Kalimat Tingkat Menengah
-        ("Kalimat Tingkat Menengah", 1, "Level 1 - Pemula", "Paragraf pendek (3–4 kalimat)"),
-        ("Kalimat Tingkat Menengah", 2, "Level 2 - Dasar", "Teks menengah ~15 detik"),
-        ("Kalimat Tingkat Menengah", 3, "Level 3 - Menengah", "Teks ~30 detik"),
-        ("Kalimat Tingkat Menengah", 4, "Level 4 - Lanjutan", "Dialog menengah"),
-        ("Kalimat Tingkat Menengah", 5, "Level 5 - Mahir", "Monolog ~45 detik"),
+        ("Kalimat Tingkat Menengah", 1, "Teks 30 Detik", "Baca paragraf selama ~30 detik dengan ritme stabil."),
+        ("Kalimat Tingkat Menengah", 2, "Roleplay 3 Giliran", "Percakapan bergantian tiga putaran (tanya–jawab–tindak lanjut)."),
+        ("Kalimat Tingkat Menengah", 3, "Telepon Singkat", "Simulasi memesan atau membuat janji via telepon."),
+        ("Kalimat Tingkat Menengah", 4, "Deskripsi Gambar", "Jelaskan gambar selama ~30 detik, fokus pada detail."),
+        ("Kalimat Tingkat Menengah", 5, "Cerita Pengalaman", "Sampaikan pengalaman harian selama ~45 detik."),
 
         # Kalimat Tingkat Lanjut
-        ("Kalimat Tingkat Lanjut", 1, "Level 1 - Pemula", "Tema bebas ~60 detik"),
-        ("Kalimat Tingkat Lanjut", 2, "Level 2 - Dasar", "Skenario kompleks"),
-        ("Kalimat Tingkat Lanjut", 3, "Level 3 - Menengah", "Presentasi singkat ~90 detik"),
-        ("Kalimat Tingkat Lanjut", 4, "Level 4 - Lanjutan", "Negosiasi singkat"),
-        ("Kalimat Tingkat Lanjut", 5, "Level 5 - Mahir", "Debat ringan"),
+        ("Kalimat Tingkat Lanjut", 1, "Tema Bebas 60 Detik", "Monolog topik pilihan selama ~60 detik."),
+        ("Kalimat Tingkat Lanjut", 2, "Skenario Kompleks", "Bertanya arah, menolak permintaan, berbicara di depan kelompok."),
+        ("Kalimat Tingkat Lanjut", 3, "Presentasi 90 Detik", "Struktur presentasi singkat: pembuka–isi–penutup."),
+        ("Kalimat Tingkat Lanjut", 4, "Negosiasi Singkat", "Tawar-menawar atau menyepakati waktu/biaya."),
+        ("Kalimat Tingkat Lanjut", 5, "Debat Ringan", "Argumen pro/kontra selama sekitar 120 detik."),
     ]
 
     by_key: Dict[Tuple[str, int], Level] = {}
