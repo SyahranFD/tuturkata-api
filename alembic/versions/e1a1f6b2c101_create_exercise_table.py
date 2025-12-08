@@ -22,6 +22,7 @@ def upgrade() -> None:
     op.create_table(
         "exercise",
         sa.Column("id", sa.UUID, primary_key=True),
+        sa.Column("order", sa.Integer, nullable=False),
         sa.Column("title", sa.String(100), nullable=False),
         sa.Column("desc", sa.Text, nullable=True),
     )

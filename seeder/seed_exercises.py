@@ -8,18 +8,22 @@ from app.model.exercise import Exercise
 def seed_exercises(db: Session) -> Dict[str, Exercise]:
     samples = [
         {
+            "order": 1,
             "title": "Membaca Kata",
             "desc": "Latihan pengucapan kata dasar",
         },
         {
+            "order": 2,
             "title": "Kalimat Tingkat Dasar",
             "desc": "Latihan pengucapan kalimat dasar",
         },
         {
+            "order": 3,
             "title": "Kalimat Tingkat Menengah",
             "desc": "Latihan pengucapan kalimat menengah",
         },
         {
+            "order": 4,
             "title": "Kalimat Tingkat Lanjut",
             "desc": "Latihan pengucapan kalimat lanjut",
         },
@@ -34,6 +38,7 @@ def seed_exercises(db: Session) -> Dict[str, Exercise]:
             continue
         exercise = Exercise(
             id=uuid.uuid4(),
+            order=s["order"],
             title=s["title"],
             desc=s.get("desc"),
         )

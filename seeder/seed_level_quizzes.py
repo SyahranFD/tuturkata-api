@@ -17,7 +17,7 @@ def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level])
         ("Membaca Kata", 2, "Ucapkan berulang huruf P, B, T, K", [
             "pa", "ba", "ta", "ka", "pi"
         ]),
-        ("Membaca Kata", 3, "Baca kata berpola CV/CVC", [
+        ("Membaca Kata", 3, "Ucapkan kata-kata berikut dengan jelas dan pelan; pecah menjadi suku kata bila perlu (ba-tu, sa-pu)", [
             "batu", "sapu", "pintu", "tas", "kamar"
         ]),
         ("Membaca Kata", 4, "Artikulasi lembut tanpa tekanan", [
@@ -127,7 +127,7 @@ def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level])
         level = levels_by_key.get((ex_title, order))
         if not level:
             continue
-        for question in questions:
+        for idx, question in enumerate(questions, start=1):
             exists = (
                 db.query(LevelQuiz)
                 .filter(LevelQuiz.level_id == level.id, LevelQuiz.question == question)
@@ -138,6 +138,7 @@ def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level])
             quiz = LevelQuiz(
                 id=uuid.uuid4(),
                 level_id=level.id,
+                order=idx,
                 instruction=instruction,
                 question=question,
             )

@@ -13,14 +13,19 @@ def get_level_quiz_by_id(db: Session, level_quiz_id: str) -> Optional[LevelQuiz]
 
 
 def get_all_level_quizzes(db: Session) -> List[LevelQuiz]:
-    return db.query(LevelQuiz).all()
+    return db.query(LevelQuiz).order_by(LevelQuiz.order.asc()).all()
 
 
 def get_level_quizzes_by_level_id(db: Session, level_id: str) -> List[LevelQuiz]:
     level = db.query(Level).filter(Level.id == level_id).first()
     if not level:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
-    return db.query(LevelQuiz).filter(LevelQuiz.level_id == level_id).all()
+    return (
+        db.query(LevelQuiz)
+        .filter(LevelQuiz.level_id == level_id)
+        .order_by(LevelQuiz.order.asc())
+        .all()
+    )
 
 
 def create_level_quiz(db: Session, payload: LevelQuizCreate) -> LevelQuiz:
@@ -29,6 +34,8 @@ def create_level_quiz(db: Session, payload: LevelQuizCreate) -> LevelQuiz:
     if not level:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
     # Validasi input
+    if payload.order is None or payload.order < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order must be >= 0")
     if not payload.instruction or not payload.instruction.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Instruction is required")
     if not payload.question or not payload.question.strip():
@@ -37,6 +44,7 @@ def create_level_quiz(db: Session, payload: LevelQuizCreate) -> LevelQuiz:
     level_quiz = LevelQuiz(
         id=uuid.uuid4(),
         level_id=payload.level_id,
+        order=payload.order,
         instruction=payload.instruction.strip(),
         question=payload.question.strip(),
     )
@@ -62,6 +70,10 @@ def update_level_quiz(db: Session, level_quiz_id: str, payload: LevelQuizUpdate)
         if not payload.question.strip():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Question cannot be empty")
         level_quiz.question = payload.question.strip()
+    if payload.order is not None:
+        if payload.order < 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order must be >= 0")
+        level_quiz.order = payload.order
     db.flush()
     return level_quiz
 

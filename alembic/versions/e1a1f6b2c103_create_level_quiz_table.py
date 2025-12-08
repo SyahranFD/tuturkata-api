@@ -23,6 +23,7 @@ def upgrade() -> None:
         "level_quiz",
         sa.Column("id", sa.UUID, primary_key=True),
         sa.Column("level_id", sa.UUID, sa.ForeignKey("level.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("order", sa.Integer, nullable=False),
         sa.Column("instruction", sa.Text, nullable=False),
         sa.Column("question", sa.Text, nullable=False),
     )

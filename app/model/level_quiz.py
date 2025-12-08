@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, Text, ForeignKey
+from sqlalchemy import Column, Text, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 
 from ..config.database import Base
@@ -10,5 +10,6 @@ class LevelQuiz(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     level_id = Column(UUID(as_uuid=True), ForeignKey("level.id", ondelete="CASCADE"), nullable=False)
+    order = Column(Integer, nullable=False)
     instruction = Column(Text, nullable=False)
     question = Column(Text, nullable=False)
