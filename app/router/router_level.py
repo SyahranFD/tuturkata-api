@@ -8,6 +8,7 @@ from ..service.level_service import (
     create_level,
     get_level_by_id,
     get_all_levels,
+    get_levels_by_exercise_id,
     update_level,
     delete_level,
 )
@@ -27,6 +28,11 @@ def create_level_endpoint(payload: LevelCreate, db: Session = Depends(get_db), _
 @router_level.get("/", response_model=List[LevelOut])
 def list_levels(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
     return get_all_levels(db)
+
+
+@router_level.get("/by-exercise/{exercise_id}", response_model=List[LevelOut])
+def list_levels_by_exercise(exercise_id: str, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+    return get_levels_by_exercise_id(db, exercise_id)
 
 
 @router_level.get("/{level_id}", response_model=LevelOut)
