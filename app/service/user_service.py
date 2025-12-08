@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 from ..model.user import User
 from ..schemas.user import UserCreate, UserUpdate
 from .auth import get_password_hash, verify_password
+from ..model.exercise import Exercise
+from ..model.level import Level
+from ..model.user_exercise import UserExercise
 
 
 def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
@@ -45,6 +48,18 @@ def create_user(db: Session, payload: UserCreate) -> User:
     )
     db.add(user)
     db.flush()  # to get defaults
+    # Initialize UserExercise records for all exercises
+    exercises = db.query(Exercise).all()
+    for ex in exercises:
+        level_count = db.query(Level).filter(Level.exercise_id == ex.id).count()
+        ue = UserExercise(
+            id=uuid.uuid4(),
+            user_id=user.id,
+            exercise_id=ex.id,
+            max_level=level_count,
+            current_level=0,
+        )
+        db.add(ue)
     return user
 
 

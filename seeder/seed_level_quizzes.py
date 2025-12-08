@@ -7,9 +7,6 @@ from app.model.level import Level
 
 
 def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level]) -> None:
-    # Untuk setiap level, buat maksimal 5 quiz.
-    # Bagian "speech_text" berisi kata/kalimat yang benar-benar harus diucapkan user.
-    # Instruksi kini disimpan di dalam daftar specs per quiz (tidak dipisah fungsi).
     specs = [
         # Membaca Kata — instruksi tidak menyebut ulang kata (speech_text)
         ("Membaca Kata", 1, [
