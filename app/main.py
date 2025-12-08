@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from .router.router_user import router_user
+from .router.router_exercise import router_exercise
+from .router.router_level import router_level
+from .router.router_level_quiz import router_level_quiz
 
 load_dotenv(find_dotenv())
 
@@ -26,4 +29,7 @@ def docs():
 
 # Include routers
 app.include_router(router_user)
+app.include_router(router_exercise)
+app.include_router(router_level)
+app.include_router(router_level_quiz)
 
