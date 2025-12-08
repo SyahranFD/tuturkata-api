@@ -1,0 +1,1 @@
+"""Seeder package untuk mengisi data awal database."""
