@@ -38,15 +38,15 @@ def create_level_quiz(db: Session, payload: LevelQuizCreate) -> LevelQuiz:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order must be >= 0")
     if not payload.instruction or not payload.instruction.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Instruction is required")
-    if not payload.question or not payload.question.strip():
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Question is required")
+    if not payload.speech_text or not payload.speech_text.strip():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Speech text is required")
 
     level_quiz = LevelQuiz(
         id=uuid.uuid4(),
         level_id=payload.level_id,
         order=payload.order,
         instruction=payload.instruction.strip(),
-        question=payload.question.strip(),
+        speech_text=payload.speech_text.strip(),
     )
     db.add(level_quiz)
     db.flush()
@@ -66,10 +66,10 @@ def update_level_quiz(db: Session, level_quiz_id: str, payload: LevelQuizUpdate)
         if not payload.instruction.strip():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Instruction cannot be empty")
         level_quiz.instruction = payload.instruction.strip()
-    if payload.question is not None:
-        if not payload.question.strip():
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Question cannot be empty")
-        level_quiz.question = payload.question.strip()
+    if payload.speech_text is not None:
+        if not payload.speech_text.strip():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Speech text cannot be empty")
+        level_quiz.speech_text = payload.speech_text.strip()
     if payload.order is not None:
         if payload.order < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order must be >= 0")

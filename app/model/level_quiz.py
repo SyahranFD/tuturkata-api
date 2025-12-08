@@ -12,4 +12,4 @@ class LevelQuiz(Base):
     level_id = Column(UUID(as_uuid=True), ForeignKey("level.id", ondelete="CASCADE"), nullable=False)
     order = Column(Integer, nullable=False)
     instruction = Column(Text, nullable=False)
-    question = Column(Text, nullable=False)
+    speech_text = Column(Text, nullable=False)

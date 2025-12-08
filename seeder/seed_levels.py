@@ -10,9 +10,9 @@ def seed_levels(db: Session, exercises_by_title: Dict[str, Exercise]) -> Dict[Tu
     # Buat 5 level untuk setiap exercise, dengan judul dan deskripsi yang relevan
     specs = [
         # Membaca Kata
-        ("Membaca Kata", 1, "Kata Sederhana (Tempo Lambat)", "Ucapkan kata dasar secara perlahan untuk melatih perencanaan suara."),
-        ("Membaca Kata", 2, "Pengulangan Konsonan P/B/T/K", "Ucapkan suku kata P/B/T/K beberapa kali dengan artikulasi lembut."),
-        ("Membaca Kata", 3, "Kata Berpola CV/CVC", "Eja kata berpola suku kata dan ucapkan per suku kata."),
+        ("Membaca Kata", 1, "Pengulangan Konsonan P/B/T/K", "Ucapkan suku kata P/B/T/K beberapa kali dengan artikulasi lembut."),
+        ("Membaca Kata", 2, "Kata Berpola", "Eja kata berpola suku kata dan ucapkan per suku kata."),
+        ("Membaca Kata", 3, "Kata Sederhana (Tempo Lambat)", "Ucapkan kata dasar secara perlahan untuk melatih perencanaan suara."),
         ("Membaca Kata", 4, "Kata Kompleks (Artikulasi Lembut)", "Latih kata lebih panjang tanpa tekanan bibir/lidah."),
         ("Membaca Kata", 5, "Daftar Kata Acak", "Jaga konsistensi lafal pada variasi kata acak."),
 

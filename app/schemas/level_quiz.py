@@ -6,7 +6,7 @@ class LevelQuizBase(BaseModel):
     level_id: UUID
     order: int
     instruction: str
-    question: str
+    speech_text: str
 
 
 class LevelQuizCreate(LevelQuizBase):
@@ -17,7 +17,7 @@ class LevelQuizUpdate(BaseModel):
     level_id: UUID | None = None
     order: int | None = None
     instruction: str | None = None
-    question: str | None = None
+    speech_text: str | None = None
 
 
 class LevelQuizOut(BaseModel):
@@ -25,7 +25,7 @@ class LevelQuizOut(BaseModel):
     level_id: UUID
     order: int
     instruction: str
-    question: str
+    speech_text: str
 
     class Config:
         from_attributes = True
