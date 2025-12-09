@@ -11,9 +11,9 @@ from ..model.exercise import Exercise
 from ..schemas.user_level import UserLevelCreate, UserLevelUpdate
 
 
-def create_user_level(db: Session, payload: UserLevelCreate) -> UserLevel:
+def create_user_level(db: Session, payload: UserLevelCreate, current_user: User) -> UserLevel:
     # Validate user and level
-    user = db.query(User).filter(User.id == str(payload.user_id)).first()
+    user = db.query(User).filter(User.id == str(current_user.id)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     level = db.query(Level).filter(Level.id == str(payload.level_id)).first()
@@ -31,7 +31,7 @@ def create_user_level(db: Session, payload: UserLevelCreate) -> UserLevel:
     # find existing user level
     existing = (
         db.query(UserLevel)
-        .filter(UserLevel.user_id == str(payload.user_id), UserLevel.level_id == str(payload.level_id))
+        .filter(UserLevel.user_id == str(current_user.id), UserLevel.level_id == str(payload.level_id))
         .first()
     )
     if existing:
@@ -43,7 +43,7 @@ def create_user_level(db: Session, payload: UserLevelCreate) -> UserLevel:
         # Jika belum ada, buat baru
         user_level = UserLevel(
             id=uuid.uuid4(),
-            user_id=str(payload.user_id),
+            user_id=str(current_user.id),
             level_id=str(payload.level_id),
             star=payload.star,
             accuration=payload.accuration,

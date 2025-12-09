@@ -1,11 +1,10 @@
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_serializer
 
 
 class UserLevelBase(BaseModel):
-    user_id: UUID
     level_id: UUID
     star: int
     accuration: int
@@ -17,7 +16,6 @@ class UserLevelCreate(UserLevelBase):
 
 
 class UserLevelUpdate(BaseModel):
-    user_id: Optional[UUID] = None
     level_id: Optional[UUID] = None
     star: Optional[int] = None
     accuration: Optional[int] = None
@@ -34,3 +32,11 @@ class UserLevelOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+    @field_serializer('created_at', when_used='json')
+    def serialize_created_at(self, value: Optional[datetime]) -> Optional[str]:
+        return value.strftime('%Y-%m-%d') if value else None
+
+    @field_serializer('updated_at', when_used='json')
+    def serialize_updated_at(self, value: Optional[datetime]) -> Optional[str]:
+        return value.strftime('%Y-%m-%d') if value else None

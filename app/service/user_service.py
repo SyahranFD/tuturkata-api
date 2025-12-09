@@ -9,6 +9,7 @@ from .auth import get_password_hash, verify_password
 from ..model.exercise import Exercise
 from ..model.level import Level
 from ..model.user_exercise import UserExercise
+from ..utils.time import wib_now
 
 
 def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
@@ -37,7 +38,7 @@ def create_user(db: Session, payload: UserCreate) -> User:
         raise ValueError("Username already taken")
 
     hashed = get_password_hash(payload.password)
-    now = datetime.utcnow()
+    now = wib_now()
     user = User(
         id=uuid.uuid4(),
         username=payload.username,
@@ -87,7 +88,7 @@ def update_user(db: Session, user_id: str, payload: UserUpdate) -> Optional[User
     if payload.password is not None and payload.password.strip():
         user.password = get_password_hash(payload.password)
     # Perbarui timestamp updated_at secara manual
-    user.updated_at = datetime.utcnow()
+    user.updated_at = wib_now()
     db.flush()
     return user
 
