@@ -4,9 +4,13 @@ from sqlalchemy.orm import Session
 
 from app.model.level_quiz import LevelQuiz
 from app.model.level import Level
-
+from app.model.exercise import Exercise
 
 def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level]) -> None:
+
+    def compute_quiz_exp(level: Level) -> int:
+        exercise = db.get(Exercise, level.exercise_id)
+        return 10 * int(exercise.order)
     specs = [
         # Membaca Kata — instruksi tidak menyebut ulang kata (speech_text)
         ("Membaca Kata", 1, [
@@ -176,6 +180,7 @@ def seed_level_quizzes(db: Session, levels_by_key: Dict[Tuple[str, int], Level])
                 order=idx,
                 instruction=item["instruction"],
                 speech_text=item["speech_text"],
+                exp=compute_quiz_exp(level),
             )
             db.add(quiz)
 

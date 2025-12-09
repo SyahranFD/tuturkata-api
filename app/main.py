@@ -33,4 +33,5 @@ def docs():
 app.include_router(router_user)
 app.include_router(router_user_level)
 app.include_router(router_user_exercise)
+app.include_router(router_level_quiz)
 

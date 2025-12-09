@@ -43,6 +43,7 @@ def create_user(db: Session, payload: UserCreate) -> User:
         username=payload.username,
         email=payload.email,
         password=hashed,
+        exp=0,
         created_at=now,
         updated_at=now,
     )

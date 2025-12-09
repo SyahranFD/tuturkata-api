@@ -34,6 +34,9 @@ def seed_exercises(db: Session) -> Dict[str, Exercise]:
     for s in samples:
         exists = db.query(Exercise).filter(Exercise.title == s["title"]).first()
         if exists:
+            # Pastikan order sesuai spesifikasi seed agar perhitungan EXP benar
+            if exists.order != s["order"]:
+                exists.order = s["order"]
             by_title[s["title"]] = exists
             continue
         exercise = Exercise(

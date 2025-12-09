@@ -9,6 +9,7 @@ class UserLevelBase(BaseModel):
     level_id: UUID
     star: int
     accuration: int
+    exp: int
 
 
 class UserLevelCreate(UserLevelBase):

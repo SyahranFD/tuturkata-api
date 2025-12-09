@@ -25,6 +25,8 @@ def create_user_level(db: Session, payload: UserLevelCreate) -> UserLevel:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Star must be >= 0")
     if payload.accuration is None or payload.accuration < 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Accuration must be >= 0")
+    if payload.exp is None or payload.exp < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Exp must be >= 0")
 
     # find existing user level
     existing = (
@@ -47,6 +49,8 @@ def create_user_level(db: Session, payload: UserLevelCreate) -> UserLevel:
             accuration=payload.accuration,
         )
         db.add(user_level)
+        # Tambahkan exp ke user hanya saat create baru
+        user.exp = (user.exp or 0) + payload.exp
     db.flush()
 
     # Update user_exercise.current_level if it exists
@@ -106,8 +110,7 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
     # Bangun output dengan flag isCompleted
     result = [
         {
-            "id": lvl.id,
-            "exercise_id": lvl.exercise_id,
+            "level_id": lvl.id,
             "order": lvl.order,
             "title": lvl.title,
             "desc": getattr(lvl, "desc", None),

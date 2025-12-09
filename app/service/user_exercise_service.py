@@ -23,7 +23,6 @@ def get_user_exercises_by_user_id(db: Session, user_id: str) -> List[dict]:
     for user_exercise in user_exercise_list:
         exercise = exercise_by_id.get(user_exercise.exercise_id)
         result.append({
-            "id": user_exercise.id,
             "exercise_id": user_exercise.exercise_id,
             "max_level": user_exercise.max_level,
             "current_level": user_exercise.current_level,

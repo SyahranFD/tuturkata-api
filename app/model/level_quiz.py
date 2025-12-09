@@ -13,3 +13,4 @@ class LevelQuiz(Base):
     order = Column(Integer, nullable=False)
     instruction = Column(Text, nullable=False)
     speech_text = Column(Text, nullable=False)
+    exp = Column(Integer, nullable=False, server_default='0')
