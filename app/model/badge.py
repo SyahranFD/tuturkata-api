@@ -1,9 +1,9 @@
 import uuid
 from sqlalchemy import Column, String, Text, Boolean, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
 
 from ..config.database import Base
+from ..utils.time import wib_now
 
 
 class Badge(Base):
@@ -16,9 +16,14 @@ class Badge(Base):
     icon_name = Column(String(100), nullable=False)
     desc = Column(Text, nullable=True)
     type = Column(String(50), nullable=False)
-    updated_at = Column(DateTime, server_default=func.now(), nullable=False)
+    # Store updated_at in WIB (UTC+7)
+    updated_at = Column(DateTime, nullable=False, default=wib_now, onupdate=wib_now)
     is_completed = Column('isCompleted', Boolean, nullable=False, default=False)
 
     @property
     def isCompleted(self):
         return self.is_completed
+
+    @property
+    def updated_at_formatted(self):
+        return self.updated_at.strftime("%Y-%m-%d") if self.updated_at else None

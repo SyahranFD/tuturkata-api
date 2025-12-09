@@ -17,8 +17,8 @@ router_user_level = APIRouter(prefix="/api/user-levels", tags=["User Levels"])
 
 
 @router_user_level.post("/", response_model=UserLevelOut, status_code=status.HTTP_201_CREATED)
-def create_user_level_endpoint(payload: UserLevelCreate, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
-    user_level = create_user_level(db, payload)
+def create_user_level_endpoint(payload: UserLevelCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    user_level = create_user_level(db, payload, current_user)
     return user_level
 
 @router_user_level.get("/{exercise_id}", response_model=List[LevelWithCompletionOut])

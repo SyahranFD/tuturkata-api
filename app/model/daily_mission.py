@@ -1,9 +1,9 @@
 import uuid
 from sqlalchemy import Column, String, Integer, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
 
 from ..config.database import Base
+from ..utils.time import wib_now
 
 
 class DailyMission(Base):
@@ -15,8 +15,13 @@ class DailyMission(Base):
     max_progress = Column(Integer, nullable=False)
     current_progress = Column(Integer, nullable=False, default=0)
     is_completed = Column('isCompleted', Boolean, nullable=False, default=False)
-    updated_at = Column(DateTime, server_default=func.now(), nullable=False)
+    # Store updated_at in WIB (UTC+7)
+    updated_at = Column(DateTime, nullable=False, default=wib_now, onupdate=wib_now)
 
     @property
     def isCompleted(self):
         return self.is_completed
+
+    @property
+    def updated_at_formatted(self):
+        return self.updated_at.strftime("%Y-%m-%d") if self.updated_at else None

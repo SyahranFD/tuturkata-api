@@ -5,24 +5,12 @@ from sqlalchemy import func
 
 from ..model.daily_mission import DailyMission
 from ..model.user_level import UserLevel
-
-
-def _wib_now() -> datetime:
-    return datetime.utcnow() + timedelta(hours=7)
-
-
-def _wib_day_range(now_wib: datetime):
-    start_wib = datetime(now_wib.year, now_wib.month, now_wib.day)
-    end_wib = start_wib + timedelta(days=1)
-    # Convert WIB range to UTC-naive range for DB filtering (UTC+7)
-    start_utc = start_wib - timedelta(hours=7)
-    end_utc = end_wib - timedelta(hours=7)
-    return start_utc, end_utc
+from ..utils.time import wib_now, wib_day_range
 
 
 def get_all_daily_missions(db: Session) -> List[DailyMission]:
-    now_wib = _wib_now()
-    start_utc, end_utc = _wib_day_range(now_wib)
+    now_wib = wib_now()
+    start_utc, end_utc = wib_day_range(now_wib)
 
     missions = db.query(DailyMission).all()
 
