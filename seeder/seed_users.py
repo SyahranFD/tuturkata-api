@@ -9,9 +9,10 @@ from app.service.auth import get_password_hash
 def seed_users(db: Session) -> None:
     samples = [
         {
-            "username": "admin",
-            "email": "admin@gmail.com",
-            "password": "admin",
+            "username": "andi",
+            "email": "andi@gmail.com",
+            "password": "pass",
+            "exp": 150,
         },
     ]
 
@@ -25,6 +26,7 @@ def seed_users(db: Session) -> None:
             username=s["username"],
             email=s["email"],
             password=get_password_hash(s["password"]),
+            exp=s["exp"],
             created_at=now,
             updated_at=now,
         )

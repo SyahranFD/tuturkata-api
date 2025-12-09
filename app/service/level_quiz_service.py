@@ -47,6 +47,7 @@ def create_level_quiz(db: Session, payload: LevelQuizCreate) -> LevelQuiz:
         order=payload.order,
         instruction=payload.instruction.strip(),
         speech_text=payload.speech_text.strip(),
+        exp=payload.exp,
     )
     db.add(level_quiz)
     db.flush()
@@ -74,6 +75,10 @@ def update_level_quiz(db: Session, level_quiz_id: str, payload: LevelQuizUpdate)
         if payload.order < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order must be >= 0")
         level_quiz.order = payload.order
+    if payload.exp is not None:
+        if payload.exp < 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Exp must be >= 0")
+        level_quiz.exp = payload.exp
     db.flush()
     return level_quiz
 

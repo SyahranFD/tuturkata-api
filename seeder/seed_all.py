@@ -13,10 +13,10 @@ def run() -> None:
         seed_users(db)
         exercises = seed_exercises(db)
         levels = seed_levels(db, exercises)
-        seed_level_quizzes(db, levels)
 
         db.commit()
 
+        seed_level_quizzes(db, levels)
         seed_user_exercises(db)
         seed_user_levels(db)
 

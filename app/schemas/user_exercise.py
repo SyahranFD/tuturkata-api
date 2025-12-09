@@ -14,7 +14,6 @@ class UserExerciseOut(BaseModel):
 
 
 class UserExerciseWithExerciseOut(BaseModel):
-    id: UUID
     exercise_id: UUID
     max_level: int
     current_level: int

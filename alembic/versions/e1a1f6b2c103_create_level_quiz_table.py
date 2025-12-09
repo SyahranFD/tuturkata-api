@@ -26,6 +26,7 @@ def upgrade() -> None:
         sa.Column("order", sa.Integer, nullable=False),
         sa.Column("instruction", sa.Text, nullable=False),
         sa.Column("speech_text", sa.Text, nullable=False),
+        sa.Column("exp", sa.Integer, nullable=False, server_default='0'),
     )
 
 

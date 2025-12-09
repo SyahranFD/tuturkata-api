@@ -7,6 +7,7 @@ class LevelQuizBase(BaseModel):
     order: int
     instruction: str
     speech_text: str
+    exp: int
 
 
 class LevelQuizCreate(LevelQuizBase):
@@ -18,6 +19,7 @@ class LevelQuizUpdate(BaseModel):
     order: int | None = None
     instruction: str | None = None
     speech_text: str | None = None
+    exp: int | None = None
 
 
 class LevelQuizOut(BaseModel):
@@ -26,6 +28,7 @@ class LevelQuizOut(BaseModel):
     order: int
     instruction: str
     speech_text: str
+    exp: int
 
     class Config:
         from_attributes = True

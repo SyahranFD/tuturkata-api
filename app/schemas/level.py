@@ -33,8 +33,7 @@ class LevelOut(BaseModel):
 
 
 class LevelWithCompletionOut(BaseModel):
-    id: UUID
-    exercise_id: UUID
+    level_id: UUID
     order: int
     title: str
     desc: Optional[str] = None

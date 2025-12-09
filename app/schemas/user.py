@@ -28,6 +28,7 @@ class UserOut(BaseModel):
     id: UUID
     username: str
     email: EmailStr
+    exp: int
     created_at: datetime
     updated_at: datetime
 
