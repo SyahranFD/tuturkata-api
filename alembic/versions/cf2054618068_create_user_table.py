@@ -27,6 +27,7 @@ def upgrade() -> None:
         sa.Column("email", sa.String(100), nullable=False),
         sa.Column("password", sa.String(255), nullable=False),
         sa.Column("exp", sa.Integer, nullable=False, server_default='0'),
+        sa.Column("streak", sa.Integer, nullable=False, server_default='1'),
         sa.Column("created_at", sa.DateTime, nullable=False, default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime, nullable=False, default=sa.func.now(), onupdate=sa.func.now()),
     )

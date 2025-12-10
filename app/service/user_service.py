@@ -45,6 +45,7 @@ def create_user(db: Session, payload: UserCreate) -> User:
         email=payload.email,
         password=hashed,
         exp=0,
+        streak=0,
         created_at=now,
         updated_at=now,
     )
@@ -99,3 +100,30 @@ def delete_user(db: Session, user_id: str) -> bool:
         return False
     db.delete(user)
     return True
+
+
+def update_streak_on_me(db: Session, current_user: User) -> None:
+    now = wib_now()
+    # If updated_at is None, initialize
+    if not current_user.updated_at:
+        current_user.streak = 1
+        current_user.updated_at = now
+        db.flush()
+        return
+
+    last = current_user.updated_at
+    last_date = datetime(last.year, last.month, last.day)
+    today_date = datetime(now.year, now.month, now.day)
+    delta_days = (today_date - last_date).days
+
+    if delta_days == 1:
+        current_user.streak = int(current_user.streak or 0) + 1
+        current_user.updated_at = now
+        db.flush()
+    elif delta_days > 1:
+        current_user.streak = 1
+        current_user.updated_at = now
+        db.flush()
+    else:
+        # same day; no change
+        pass

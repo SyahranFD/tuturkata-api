@@ -6,6 +6,7 @@ from typing import List
 from ..config.database import get_db
 from ..schemas.user import UserCreate, UserOut, UserUpdate, TokenOut, UserLogin
 from ..service.user_service import *
+from ..service.user_service import update_streak_on_me
 from ..service.auth import create_access_token, get_current_user
 from ..model.user import User
 
@@ -32,7 +33,13 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
 
 
 @router_user.get("/me", response_model=UserOut)
-def read_me(current_user: User = Depends(get_current_user)):
+def read_me(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Update streak logic on each /me call as requested
+    try:
+        update_streak_on_me(db, current_user)
+    except Exception:
+        # Fail silently; still return user info
+        pass
     return current_user
 
 @router_user.put("/{user_id}", response_model=UserOut)

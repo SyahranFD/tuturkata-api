@@ -29,6 +29,7 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
     exp: int
+    streak: int
     created_at: datetime
     updated_at: datetime
 
