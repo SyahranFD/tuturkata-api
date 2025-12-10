@@ -1,8 +1,10 @@
+import uuid
 from typing import List
 from sqlalchemy.orm import Session
 
 from ..model.user_exercise import UserExercise
 from ..model.exercise import Exercise
+from ..model.level import Level
 
 
 def get_user_exercises_by_user_id(db: Session, user_id: str) -> List[dict]:
@@ -31,3 +33,26 @@ def get_user_exercises_by_user_id(db: Session, user_id: str) -> List[dict]:
         })
 
     return result
+
+
+def upsert_current_level_by_exercise(db: Session, user_id: str, exercise_id: str, target_order: int) -> None:
+    user_exercise = (
+        db.query(UserExercise)
+        .filter(UserExercise.user_id == user_id, UserExercise.exercise_id == exercise_id)
+        .first()
+    )
+    if user_exercise:
+        # Pastikan tidak menurunkan progress yang sudah lebih tinggi
+        current = user_exercise.current_level or 0
+        user_exercise.current_level = max(current, target_order)
+    else:
+        level_count = db.query(Level).filter(Level.exercise_id == exercise_id).count()
+        new_ue = UserExercise(
+            id=uuid.uuid4(),
+            user_id=user_id,
+            exercise_id=exercise_id,
+            max_level=level_count,
+            current_level=target_order,
+        )
+        db.add(new_ue)
+    db.flush()

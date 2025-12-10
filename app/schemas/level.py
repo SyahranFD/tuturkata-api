@@ -1,6 +1,7 @@
 from typing import Optional
+from datetime import datetime
 from uuid import UUID
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 
 
 class LevelBase(BaseModel):
@@ -37,7 +38,14 @@ class LevelWithCompletionOut(BaseModel):
     order: int
     title: str
     desc: Optional[str] = None
+    star: int
+    accuration: int
+    updated_at: Optional[datetime] = None
     is_completed: bool = Field(..., alias="isCompleted")
 
     class Config:
         from_attributes = True
+
+    @field_serializer('updated_at', when_used='json')
+    def serialize_updated_at(self, value: Optional[datetime]) -> Optional[str]:
+        return value.strftime('%Y-%m-%d') if value else None

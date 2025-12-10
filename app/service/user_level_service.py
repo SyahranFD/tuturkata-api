@@ -7,6 +7,7 @@ from ..model.user_level import UserLevel
 from ..model.user import User
 from ..model.level import Level
 from ..model.user_exercise import UserExercise
+from ..service.user_exercise_service import upsert_current_level_by_exercise
 from ..model.exercise import Exercise
 from ..schemas.user_level import UserLevelCreate, UserLevelUpdate
 
@@ -39,6 +40,12 @@ def create_user_level(db: Session, payload: UserLevelCreate, current_user: User)
         user_level = existing
         user_level.star = payload.star
         user_level.accuration = payload.accuration
+        # Pastikan updated_at terbarui
+        try:
+            from ..utils.time import wib_now
+            user_level.updated_at = wib_now()
+        except Exception:
+            pass
     else:
         # Jika belum ada, buat baru
         user_level = UserLevel(
@@ -53,29 +60,8 @@ def create_user_level(db: Session, payload: UserLevelCreate, current_user: User)
         user.exp = (user.exp or 0) + payload.exp
     db.flush()
 
-    # Update user_exercise.current_level if it exists
-    user_exercise = (
-        db.query(UserExercise)
-        .filter(
-            UserExercise.user_id == user.id,
-            UserExercise.exercise_id == level.exercise_id,
-        )
-        .first()
-    )
-    if user_exercise:
-        user_exercise.current_level = level.order
-    else:
-        # Jika belum ada, buat baru
-        level_count = db.query(Level).filter(Level.exercise_id == level.exercise_id).count()
-        user_exercise = UserExercise(
-            id=uuid.uuid4(),
-            user_id=user.id,
-            exercise_id=level.exercise_id,
-            max_level=level_count,
-            current_level=level.order,
-        )
-        db.add(user_exercise)
-    db.flush()
+    # Update atau buat UserExercise current_level melalui service helper
+    upsert_current_level_by_exercise(db, user.id, level.exercise_id, level.order)
     return user_level
 
 
@@ -106,6 +92,7 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
         .all()
     )
     completed_ids = {ul.level_id for ul in user_levels}
+    stats_by_level = {ul.level_id: {"star": ul.star, "accuration": ul.accuration, "updated_at": ul.updated_at} for ul in user_levels}
 
     # Bangun output dengan flag isCompleted
     result = [
@@ -114,6 +101,9 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
             "order": lvl.order,
             "title": lvl.title,
             "desc": getattr(lvl, "desc", None),
+            "star": stats_by_level.get(lvl.id, {}).get("star", 0),
+            "accuration": stats_by_level.get(lvl.id, {}).get("accuration", 0),
+            "completed_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
             "isCompleted": lvl.id in completed_ids,
         }
         for lvl in levels
