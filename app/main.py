@@ -1,5 +1,6 @@
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
@@ -12,6 +13,7 @@ from .router.router_user_exercise import router_user_exercise
 from .router.router_badge import router_badge
 from .router.router_daily_mission import router_daily_mission
 from .router.router_progress import router_progress
+from .router.router_ai import router_ai
 
 load_dotenv(find_dotenv())
 
@@ -32,6 +34,9 @@ app.add_middleware(
 def docs():
     return RedirectResponse(url='/docs')
 
+# Serve media files (generated audio, uploads)
+app.mount("/media", StaticFiles(directory="media"), name="media")
+
 # Include routers
 app.include_router(router_user)
 app.include_router(router_user_exercise)
@@ -40,4 +45,5 @@ app.include_router(router_level_quiz)
 app.include_router(router_badge)
 app.include_router(router_daily_mission)
 app.include_router(router_progress)
+app.include_router(router_ai)
 
