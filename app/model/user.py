@@ -14,6 +14,7 @@ class User(Base):
     email = Column(String(100), nullable=False)
     password = Column(String(255), nullable=False)
     exp = Column(Integer, nullable=False, server_default='0')
+    streak = Column(Integer, nullable=False, server_default='0')
     # Store timestamps in WIB (UTC+7), using application-side defaults
     created_at = Column(DateTime, nullable=False, default=wib_now)
     updated_at = Column(DateTime, nullable=False, default=wib_now, onupdate=wib_now)

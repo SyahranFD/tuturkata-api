@@ -103,10 +103,84 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
             "desc": getattr(lvl, "desc", None),
             "star": stats_by_level.get(lvl.id, {}).get("star", 0),
             "accuration": stats_by_level.get(lvl.id, {}).get("accuration", 0),
-            "completed_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
+            "updated_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
             "isCompleted": lvl.id in completed_ids,
         }
         for lvl in levels
     ]
 
     return result
+
+
+def get_next_level_for_exercise(db: Session, user_id: str, exercise_id: str):
+    # Validate user and exercise
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    exercise = db.query(Exercise).filter(Exercise.id == exercise_id).first()
+    if not exercise:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found")
+
+    # Find latest updated level for this exercise
+    latest_level = (
+        db.query(Level)
+        .join(UserLevel, UserLevel.level_id == Level.id)
+        .filter(UserLevel.user_id == user_id, Level.exercise_id == exercise_id)
+        .order_by(UserLevel.updated_at.desc())
+        .first()
+    )
+
+    # Determine next order: first level if no progress yet
+    next_order = (latest_level.order + 1) if latest_level else 1
+
+    # Fetch next level by order
+    next_level = (
+        db.query(Level)
+        .filter(Level.exercise_id == exercise_id, Level.order == next_order)
+        .first()
+    )
+
+    if not next_level:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Next level not found")
+
+    return {"level_id": next_level.id, "title": next_level.title}
+
+
+def get_next_level_for_user(db: Session, user_id: str):
+    # Cari progress terbaru user di semua exercise
+    latest_level = (
+        db.query(Level)
+        .join(UserLevel, UserLevel.level_id == Level.id)
+        .filter(UserLevel.user_id == user_id)
+        .order_by(UserLevel.updated_at.desc())
+        .first()
+    )
+
+    if latest_level:
+        # Tentukan level berikutnya dalam exercise yang sama
+        next_order = latest_level.order + 1
+        next_level = (
+            db.query(Level)
+            .filter(Level.exercise_id == latest_level.exercise_id, Level.order == next_order)
+            .first()
+        )
+        if not next_level:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Next level not found")
+        return {"exercise_id": next_level.exercise_id, "level_id": next_level.id, "title": next_level.title}
+
+    # Jika belum ada progress: ambil exercise pertama lalu level pertama
+    first_exercise = db.query(Exercise).order_by(Exercise.order.asc()).first()
+    if not first_exercise:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No exercises available")
+
+    first_level = (
+        db.query(Level)
+        .filter(Level.exercise_id == first_exercise.id)
+        .order_by(Level.order.asc())
+        .first()
+    )
+    if not first_level:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No levels available for the first exercise")
+
+    return {"exercise_id": first_level.exercise_id, "level_id": first_level.id, "title": first_level.title}
