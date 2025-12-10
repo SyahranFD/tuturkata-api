@@ -39,6 +39,12 @@ def create_user_level(db: Session, payload: UserLevelCreate, current_user: User)
         user_level = existing
         user_level.star = payload.star
         user_level.accuration = payload.accuration
+        # Pastikan updated_at terbarui
+        try:
+            from ..utils.time import wib_now
+            user_level.updated_at = wib_now()
+        except Exception:
+            pass
     else:
         # Jika belum ada, buat baru
         user_level = UserLevel(
@@ -106,6 +112,7 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
         .all()
     )
     completed_ids = {ul.level_id for ul in user_levels}
+    stats_by_level = {ul.level_id: {"star": ul.star, "accuration": ul.accuration, "updated_at": ul.updated_at} for ul in user_levels}
 
     # Bangun output dengan flag isCompleted
     result = [
@@ -114,6 +121,9 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
             "order": lvl.order,
             "title": lvl.title,
             "desc": getattr(lvl, "desc", None),
+            "star": stats_by_level.get(lvl.id, {}).get("star", 0),
+            "accuration": stats_by_level.get(lvl.id, {}).get("accuration", 0),
+            "updated_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
             "isCompleted": lvl.id in completed_ids,
         }
         for lvl in levels
