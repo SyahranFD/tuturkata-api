@@ -7,6 +7,7 @@ from ..model.user_level import UserLevel
 from ..model.user import User
 from ..model.level import Level
 from ..model.user_exercise import UserExercise
+from ..service.user_exercise_service import upsert_current_level_by_exercise
 from ..model.exercise import Exercise
 from ..schemas.user_level import UserLevelCreate, UserLevelUpdate
 
@@ -59,29 +60,8 @@ def create_user_level(db: Session, payload: UserLevelCreate, current_user: User)
         user.exp = (user.exp or 0) + payload.exp
     db.flush()
 
-    # Update user_exercise.current_level if it exists
-    user_exercise = (
-        db.query(UserExercise)
-        .filter(
-            UserExercise.user_id == user.id,
-            UserExercise.exercise_id == level.exercise_id,
-        )
-        .first()
-    )
-    if user_exercise:
-        user_exercise.current_level = level.order
-    else:
-        # Jika belum ada, buat baru
-        level_count = db.query(Level).filter(Level.exercise_id == level.exercise_id).count()
-        user_exercise = UserExercise(
-            id=uuid.uuid4(),
-            user_id=user.id,
-            exercise_id=level.exercise_id,
-            max_level=level_count,
-            current_level=level.order,
-        )
-        db.add(user_exercise)
-    db.flush()
+    # Update atau buat UserExercise current_level melalui service helper
+    upsert_current_level_by_exercise(db, user.id, level.exercise_id, level.order)
     return user_level
 
 
@@ -123,7 +103,7 @@ def get_levels_completion_by_exercise(db: Session, user_id: str, exercise_id: st
             "desc": getattr(lvl, "desc", None),
             "star": stats_by_level.get(lvl.id, {}).get("star", 0),
             "accuration": stats_by_level.get(lvl.id, {}).get("accuration", 0),
-            "updated_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
+            "completed_at": stats_by_level.get(lvl.id, {}).get("updated_at", None),
             "isCompleted": lvl.id in completed_ids,
         }
         for lvl in levels
