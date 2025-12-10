@@ -49,3 +49,12 @@ class LevelWithCompletionOut(BaseModel):
     @field_serializer('updated_at', when_used='json')
     def serialize_updated_at(self, value: Optional[datetime]) -> Optional[str]:
         return value.strftime('%Y-%m-%d') if value else None
+
+
+class LevelNextOut(BaseModel):
+    exercise_id: UUID
+    level_id: UUID
+    title: str
+
+    class Config:
+        from_attributes = True
